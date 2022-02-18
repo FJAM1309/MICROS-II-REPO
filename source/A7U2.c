@@ -61,10 +61,17 @@
 
 static void (*vfnTmpStates[])(void) =
 {
-    (uint8_t (*)(uint8_t bChannel))bfnADC_Read, 		//READ ADC VALUE
-    (uint8_t (*)(uint8_t bVoltage))bfnConvert_V2Temp,   //CONVERT V TO TEMPERATURE
-    (void (*)(uint16_t wTemp))vfnRefresh							//PRINT
+    (void (*)(void))vfnReadADC, 		//READ ADC VALUE
+    (void (*)(void))vfnConvert,   		//CONVERT V TO TEMPERATURE
+    (void (*)(void))vfnRefresh			//PRINT
 };
+
+/* Global Var */
+GPIO_Type *rGpioB = GPIOB;          /* Peripheral GPIOB base address */
+uint16_t wVolt = 0;
+uint16_t wTemp = 0;
+uint8_t bCurrentState = STATE_READ;
+
 
 /*
  * @brief   Application entry point.
@@ -86,24 +93,46 @@ int main(void) {
     vfnPIT0Init(TIMER_VALUE_700ms);
 //    vfnPWM_Init();
 
-
-    volatile uint8_t bCnt = 0;
     while(1)
     {
     	vfnBluBlink();
-    	vfnTmpStates[bCurrentState]();
-
-    	if(bCnt < SAMPLES_TAKEN)
-    	{
-        	wTemp = bfnConvert_V2Temp(bfnADC_Read(ADC_Channel_0));
-        	++bCnt;
-    	}
-    	else
-    	{
-			PRINTF("TEMP: %i\n", wTemp);
-			bCnt = 0;
-    	}
+    	vfnSM();
     }
+}
+
+void vfnSM()
+{
+	vfnTmpStates[bCurrentState]();
+}
+
+void vfnReadADC(void)
+{
+	uint16_t bCnt = 0;
+	if(bCnt < SAMPLES_TAKEN)
+	{
+		bCnt++;
+		wVolt += bfnADC_Read(ADC_CHANNEL_0);
+		bCurrentState = STATE_READ;
+	}
+	else
+	{
+		bCnt = 0;
+		bCurrentState = STATE_CONVERT;
+	}
+}
+
+void vfnConvert(void)
+{
+	wVolt /= SAMPLES_TAKEN;
+	wTemp = bfnConvert_V2Temp(wVolt);
+	bCurrentState = STATE_REFRESH;
+}
+
+void vfnRefresh(uint16_t wTemp)
+{
+	PRINTF("\n\t\n\t\n\t\n\t\n\t\n\t");
+	PRINTF("TEMP: %l\n\t", wTemp);
+	bCurrentState = STATE_READ;
 }
 
 void vfnBluBlink()
@@ -113,10 +142,3 @@ void vfnBluBlink()
 		rGpioB->PTOR |= 1 << PIN_B0;
 	}
 }
-
-void vfnRefresh(uint16_t wTemp)
-{
-	PRINTF("TEMP: %i\n\t", wTemp);
-	bCurrentState = STATE_READ;
-}
-

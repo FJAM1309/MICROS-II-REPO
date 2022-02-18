@@ -99,8 +99,6 @@ uint8_t bfnADC_Read(uint8_t bChannel)
 uint8_t bfnConvert_V2Temp(uint8_t bVoltage)
 {
     uint8_t bTemp = 0;
-
     bTemp = bVoltage/CONVERSION_VALUE;
-    bCurrentState = STATE_REFRESH;
     return bTemp;
 }
