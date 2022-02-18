@@ -13,7 +13,7 @@
  * Definitions
  ******************************************************************************/
 #define TIMER_VALUE_700ms   ( 0x2160EBF )
-#define ADC_Channel_0 	    ( 0 )
+#define ADC_CHANNEL_0 	    ( 0 )
 #define PIN_B0              ( 0 )
 #define SAMPLES_TAKEN	    ( 10 )
 /*******************************************************************************
@@ -23,9 +23,6 @@
 /*******************************************************************************
  * Local Variables
  ******************************************************************************/
-GPIO_Type *rGpioB = GPIOB;          /* Peripheral GPIOB base address */
-uint8_t bCurrentState;
-uint16_t wTemp = 0;
  
 typedef enum
 {
@@ -49,6 +46,9 @@ typedef enum
  ******************************************************************************/
 void vfnBluBlink(void);
 void vfnRefresh(uint16_t wTemp);
+void vfnReadADC(void);
+void vfnConvert(void);
+void vfnSM(void);
 /******************************************************************************/
 
 
