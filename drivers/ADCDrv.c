@@ -9,6 +9,7 @@
 /****************************************************************************/
 #include <MKL25Z4.h>
 #include "ADCDrv.h"
+#include "A7U2.h"
 /*******************************************************************************
  * Definitions
  ******************************************************************************/
@@ -97,9 +98,9 @@ uint8_t bfnADC_Read(uint8_t bChannel)
 
 uint8_t bfnConvert_V2Temp(uint8_t bVoltage)
 {
-    volatile static uint8_t bCnt = 0;
     uint8_t bTemp = 0;
 
     bTemp = bVoltage/CONVERSION_VALUE;
+    bCurrentState = STATE_REFRESH;
     return bTemp;
 }
