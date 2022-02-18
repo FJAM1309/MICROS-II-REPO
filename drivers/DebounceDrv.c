@@ -104,8 +104,12 @@ uint8_t bfndebounceUpdate (void)  //Returns 0
  * RETURNS:
  * Button state
  ******************************************************************************/
-uint8_t bfnBtnState(void)
+uint8_t bfnBtnState(uint8_t bBtn)
 {
+	uint8_t bLastValue = 2;
+	uint8_t bChange; //si lo tengo a GND o lo dejé aplastado
+	uint8_t bVarDebounce = 0;
+	uint8_t bFlag = 0;
     if(bFlag == 0)
     {
     bFlag = 1; //[MC]
@@ -125,6 +129,6 @@ uint8_t bfnBtnState(void)
         }
     }
     bLastValue = bVarDebounce;
-    return 0;
     }
+    return 0;
 }

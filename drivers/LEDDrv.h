@@ -22,8 +22,9 @@
 //Port B
 #define	RED		( 18 )
 #define	GRN		( 19 )
-//Port A
-#define	BLU		( 13 )
+#define PIN_B0  ( 0 )
+//Port D
+#define	BLU		( 1 )
 
 /*******************************************************************************
  * Local Function Prototypes

@@ -7,7 +7,7 @@
 /****************************************************************************/
 /***        Include files                                                 ***/
 /****************************************************************************/
-#include"LEDDvr.h"
+#include"LEDDrv.h"
 
 /*******************************************************************************
  * Definitions
@@ -21,8 +21,8 @@
  * Local Variables
  ******************************************************************************/
 
-GPIO_Type *rGpioA = GPIOA; 			/* Peripheral GPIOA base address */
-GPIO_Type *rGpioB = GPIOB;			/* Peripheral GPIOB base address */
+GPIO_Type *rGpioD = GPIOD; 			/* Peripheral GPIOA base address */
+extern GPIO_Type *rGpioB;			/* Peripheral GPIOB base address */
 /*******************************************************************************
  * Code
  ******************************************************************************/
@@ -38,22 +38,26 @@ void vfnLEDsInit(void)
 {
 	SIM_Type *rclkSIM_gpio= SIM;		/* Peripheral SIM base pointer */
 
-	PORT_Type *rPortA = PORTA;			/* Peripheral PORTA base pointer */
+	PORT_Type *rPortD = PORTD;			/* Peripheral PORTA base pointer */
 	PORT_Type *rPortB = PORTB;			/* Peripheral PORTB base pointer */
 
 	/*Enable Clks*/
-	rclkSIM_gpio->SCGC5 = SIM_SCGC5_PORTB_MASK | SIM_SCGC5_PORTA_MASK;
+	rclkSIM_gpio->SCGC5 = SIM_SCGC5_PORTB_MASK | SIM_SCGC5_PORTD_MASK;
 
-	rPortA->PCR[13] = PORT_PCR_MUX(1);	/*Alternative pin MUX*/
+	rPortD->PCR[1] = PORT_PCR_MUX(1);	/*Alternative pin MUX*/
 	rPortB->PCR[18] = PORT_PCR_MUX(1);
 	rPortB->PCR[19] = PORT_PCR_MUX(1);
+    rPortB->PCR[PIN_B0] = PORT_PCR_MUX(1);
 
-    rGpioA->PDDR =1u << BLU;			/*Port Data Direction Register*/
-    rGpioB->PDDR = 1u << RED | 1u << GRN;
+
+    rGpioD->PDDR =1u << BLU;			/*Port Data Direction Register*/
+    rGpioB->PDDR = 1u << RED | 1u << GRN | 1u << PIN_B0;
 
 	rGpioB->PSOR = 1u << RED; 			/*Turn OFF*/
 	rGpioB->PSOR |= 1u << GRN;
-	rGpioA->PSOR |= 1u << BLU;
+	rGpioD->PSOR |= 1u << BLU;
+
+    rGpioB->PSOR |= 1u << PIN_B0;
 }
 /*******************************************************************************
  * vfnLEDRed
@@ -67,7 +71,7 @@ void vfnLEDRed(void)
 	/*RED*/
 	rGpioB->PCOR = 1u << RED;
 	rGpioB->PSOR = 1u << GRN;
-	rGpioA->PSOR = 1u << BLU;
+	rGpioD->PSOR = 1u << BLU;
 }
 /*******************************************************************************
  * vfnLEDGreen
@@ -81,7 +85,7 @@ void vfnLEDGreen(void)
 	/*GREEN*/
 	rGpioB->PSOR = 1u << RED;
 	rGpioB->PCOR = 1u << GRN;
-	rGpioA->PSOR = 1u << BLU;
+	rGpioD->PSOR = 1u << BLU;
 }
 /*******************************************************************************
  * vfnLEDBlue
@@ -95,7 +99,7 @@ void vfnLEDBlue(void)
 	/*BLUE*/
 	rGpioB->PSOR = 1u << RED;
 	rGpioB->PSOR = 1u << GRN;
-	rGpioA->PCOR = 1u << BLU;
+	rGpioD->PCOR = 1u << BLU;
 }
 /*******************************************************************************
  * vfnLEDsOff
@@ -108,5 +112,5 @@ void vfnLEDsOff(void)
 {
 	rGpioB->PSOR = 1u << RED;
 	rGpioB->PSOR = 1u << GRN;
-	rGpioA->PSOR = 1u << BLU;
+	rGpioD->PSOR = 1u << BLU;
 }
