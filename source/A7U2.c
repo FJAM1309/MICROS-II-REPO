@@ -72,6 +72,8 @@ uint16_t wVolt = 0;
 uint16_t wTemp = 0;
 uint8_t bCurrentState = STATE_READ;
 
+//EDIT
+
 
 /*
  * @brief   Application entry point.
