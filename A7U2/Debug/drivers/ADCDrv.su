@@ -1,0 +1,4 @@
+../drivers/ADCDrv.c:35:6:vfnADC_Innit	16	static
+../drivers/ADCDrv.c:65:6:vfnADC_Channel_Innit	24	static
+../drivers/ADCDrv.c:86:9:bfnADC_Read	24	static
+../drivers/ADCDrv.c:99:9:bfnConvert_V2Temp	32	static

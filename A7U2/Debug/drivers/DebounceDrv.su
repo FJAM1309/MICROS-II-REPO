@@ -1,0 +1,3 @@
+../drivers/DebounceDrv.c:36:6:vfnbuttonInit	16	static
+../drivers/DebounceDrv.c:55:9:bfndebounceUpdate	16	static
+../drivers/DebounceDrv.c:107:9:bfnBtnState	40	static

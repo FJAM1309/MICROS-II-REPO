@@ -1,0 +1,6 @@
+../source/A7U2.c:81:5:main	8	static
+../source/A7U2.c:106:6:vfnSM	8	static
+../source/A7U2.c:111:6:vfnReadADC	8	static
+../source/A7U2.c:127:6:vfnConvert	8	static
+../source/A7U2.c:134:6:vfnRefresh	8	static
+../source/A7U2.c:147:6:vfnBluBlink	8	static
