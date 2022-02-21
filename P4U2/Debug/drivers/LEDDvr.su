@@ -1,0 +1,5 @@
+../drivers/LEDDvr.c:41:6:vfnLEDsInit	32	static
+../drivers/LEDDvr.c:73:6:vfnLEDRed	8	static
+../drivers/LEDDvr.c:87:6:vfnLEDGreen	8	static
+../drivers/LEDDvr.c:101:6:vfnLEDBlue	8	static
+../drivers/LEDDvr.c:115:6:vfnLEDsOff	8	static

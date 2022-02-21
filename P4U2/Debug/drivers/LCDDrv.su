@@ -1,0 +1,12 @@
+../drivers/LCDDrv.c:109:6:vfnLCDDriver	8	static
+../drivers/LCDDrv.c:121:6:vfnLCDInit	8	static
+../drivers/LCDDrv.c:137:9:bfnLCDBusy	8	static
+../drivers/LCDDrv.c:155:6:vfnLCDUpDate	8	static
+../drivers/LCDDrv.c:171:6:vfnLCDGotoxy	16	static
+../drivers/LCDDrv.c:184:6:vfnLCDGotoxy_Home	8	static
+../drivers/LCDDrv.c:202:6:vfnDly500nsState	8	static
+../drivers/LCDDrv.c:217:6:vfnState0MSN	8	static
+../drivers/LCDDrv.c:231:6:vfnState1EDown	8	static
+../drivers/LCDDrv.c:244:6:vfnState2LSN	8	static
+../drivers/LCDDrv.c:267:6:vfnStateExecution	8	static
+../drivers/LCDDrv.c:280:6:vfnState_Idle	8	static
