@@ -1,0 +1,5 @@
+../drivers/LEDDrv.c:39:6:vfnLEDsInit	24	static
+../drivers/LEDDrv.c:82:6:vfnLEDRed	8	static
+../drivers/LEDDrv.c:96:6:vfnLEDGreen	8	static
+../drivers/LEDDrv.c:110:6:vfnLEDBlue	8	static
+../drivers/LEDDrv.c:124:6:vfnLEDsOff	8	static
