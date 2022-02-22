@@ -17,8 +17,8 @@
  * Definitions
  ******************************************************************************/
 #define TIME_MESSAGE 2000
-#define PORTC_MASK 	(0x7F)
-#define	PORTB_MASK	(0X0F)
+#define PORTC_MASK 	( 0x7F )
+#define	PORTB_MASK	( 0X0F )
 
 /*******************************************************************************
  * Global Variables

@@ -12,9 +12,9 @@
 /*******************************************************************************
  * Definitions
  ******************************************************************************/
-#define RS (4)
+#define RS 				( 1 << 4u )
 #define R_W (0x20)
-#define ENABLE ( 2 )
+#define ENABLE 			( 1 << 5u )
 #define DELAY   (0X2F)
 #define   LCD_INIT_CMD0 ( 0x33 )
 #define   LCD_INIT_CMD1 ( 0x32 )
