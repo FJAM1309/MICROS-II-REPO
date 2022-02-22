@@ -15,8 +15,9 @@
  ******************************************************************************/
 #define JUMP_VALUE          ( 0xC0 )
 #define CURSOR_HOME_VALUE   ( 0x03 )
-#define MSB_SHIFT           ( 0x04 )
+#define SHIFT	            ( 0x04 )
 #define LSB_MASK            ( 0x0F )
+#define MSB_MASK			( 0xF0 )
 /*******************************************************************************
  * Local Function Prototypes
  ******************************************************************************/
@@ -158,6 +159,9 @@ void vfnLCDUpDate()
     {
         bDataSize = sizeof(baLCDConfig);
         bpLCDData = &baLCDConfig[xbword];
+        bDataCnt = LCD_X;
+        rGpioC->PDOR |= RS;
+        bRegister_Select = 0x01;
         bCurrentState = MSN_STATE;
     }
 }
@@ -170,8 +174,7 @@ void vfnLCDUpDate()
 ******************************************************************************/
 void vfnLCDGotoxy (uint8_t bx, uint8_t by) //0000-0100
 {
-	rGpioC->PDOR &= ~(RS);
-    bpLCDData = &bCursor_Home[0];
+    bpLCDData = &bCursor_Home[xbword];
     bCurrentState = MSN_STATE;
 }
 /*******************************************************************************
@@ -183,8 +186,7 @@ void vfnLCDGotoxy (uint8_t bx, uint8_t by) //0000-0100
 ******************************************************************************/
 void vfnLCDGotoxy_Home()
 {
-	rGpioC->PDOR &= ~(RS);
-    bpLCDData = &bCursor_Home[0];
+    bpLCDData = &balJump[xbword];
     bCurrentState = MSN_STATE;
 }
 /*******************************************************************************
@@ -216,10 +218,11 @@ void vfnDly500nsState(void)
 ******************************************************************************/
 void vfnState0MSN()
 {         
-	rGpioC->PDOR = (*bpLCDData++ >> MSB_SHIFT) | (ENABLE);
+	rGpioC->PDOR = (*bpLCDData & MSB_MASK) >> SHIFT;
     bPreviousState = LSN_STATE;
     bCurrentState = DELAY_STATE;
     bNextState = DOWN_STATE;
+	rGpioC->PDOR |= ENABLE;
 }
 /*******************************************************************************
 * vfnState1EDown
@@ -243,19 +246,11 @@ void vfnState1EDown(void)
 ******************************************************************************/
 void vfnState2LSN()
 { 
-	rGpioC->PDOR = (*bpLCDData++ & LSB_MASK) | (ENABLE);
-    if(bDataCnt++ > bDataSize)
-    {
-        bPreviousState = EXECUTION_STATE;
-        bCurrentState = DELAY_STATE;
-        bNextState = DOWN_STATE;
-    }
-    else
-    {
-        bPreviousState = MSN_STATE;
-        bCurrentState = DELAY_STATE;
-        bNextState = DOWN_STATE;
-    }
+	rGpioC->PDOR = (*bpLCDData & LSB_MASK);
+    bPreviousState = EXECUTION_STATE;
+    bCurrentState = DELAY_STATE;
+    bNextState = DOWN_STATE;
+	rGpioC->PDOR |= ENABLE;
 }
 /*******************************************************************************
 * vfnStateExecution
@@ -266,9 +261,40 @@ void vfnState2LSN()
 ******************************************************************************/
 void vfnStateExecution()
 {
-	rGpioC->PDOR = RS;
-    bCurrentState = DELAY_STATE;
-    bNextState = IDLE_STATE;
+	if(bDataSize--)
+	{
+        bCurrentState = DELAY_STATE;
+        bNextState = MSN_STATE;
+        bpLCDData++;
+	}
+	else
+	{
+        if(bRegister_Select)
+        {
+            bCurrentState = DELAY_STATE;
+            bNextState = IDLE_STATE;
+            bRegister_Select = 0x00;
+            rGpioC->PDOR &= ~(RS);
+            if(brow)
+            {
+
+            }
+            else
+            {
+                brow = 0x00;
+                xbword = 0x00;
+                bRegister_Select = 0x00;
+                rGpioC->PDOR &= ~(RS);
+                vfnLCDGotoxy_Home();
+                bNextState = MSN_STATE;
+                bCursor = 0x00;
+            }
+        }
+        else
+        {
+
+        }
+	}
 }
 /*******************************************************************************
 * vfnState_Idle
