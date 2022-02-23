@@ -51,7 +51,6 @@ uint8_t gbLCDWelcomeMSG[LCD_Y][LCD_X];
 uint8_t Data_Out = 0x00;
 uint8_t bCursor = 0x00;
 volatile  uint8_t bCnt = DELAY;
-static uint8_t bDataCnt = 0x00;
 static uint8_t bDataSize = 0x00;
 static uint8_t *bpLCDData = 0x00;
 static uint8_t xbword = 0x00;
@@ -72,11 +71,6 @@ static uint8_t bPreviousState;
 static uint8_t bCurrentState = IDLE_STATE;
 static uint8_t bNextState = MSN_STATE;
 
-static uint8_t baLCDData[]=
-{
-
-};
-
 static uint8_t baLCDConfig[]=
 {
     LCD_INIT_CMD0,  //initial 3 steps
@@ -85,10 +79,6 @@ static uint8_t baLCDConfig[]=
     LCD_INIT_CMD3,  //display off
     LCD_INIT_CMD4,  //display clear
     LCD_INIT_CMD5   // mode set
-}; 
-
-static uint8_t baLCDMsg[]=
-{
 };
 
 static uint8_t balJump[]=
@@ -111,7 +101,6 @@ static uint8_t bCursor_Home[]=
 void vfnLCDDriver()
 {
     vfnDriverLCD[bCurrentState]();
-
 }
 /*******************************************************************************
 * vfnLCDInit
@@ -158,9 +147,9 @@ void vfnLCDUpDate()
 {
     if(!bfnLCDBusy())
     {
-        bDataSize = sizeof(baLCDConfig);
-        bpLCDData = &baLCDConfig[xbword];
-        bDataCnt = LCD_X;
+        bDataSize = sizeof(gbLCDWelcomeMSG);
+        bDataSize = LCD_X;
+        bpLCDData = &gbLCDWelcomeMSG[brow][xbword];
         rGpioC->PDOR |= RS;
         bRegister_Select = 0x01;
         bCurrentState = MSN_STATE;
@@ -173,10 +162,10 @@ void vfnLCDUpDate()
 * RETURNS:
 * void
 ******************************************************************************/
-void vfnLCDGotoxy (uint8_t bx, uint8_t by) //0000-0100
+void vfnLCDGotoxy(void) //0000-0100
 {
     bpLCDData = &balJump[xbword];
-    bCurrentState = MSN_STATE;
+    bDataSize = sizeof(balJump)/sizeof(balJump[0]);
 }
 /*******************************************************************************
 * vfnLCDGotoxy_Home
@@ -188,7 +177,7 @@ void vfnLCDGotoxy (uint8_t bx, uint8_t by) //0000-0100
 void vfnLCDGotoxy_Home()
 {
     bpLCDData = &bCursor_Home[xbword];
-    bCurrentState = MSN_STATE;
+    bDataSize = sizeof(bCursor_Home)/sizeof(bCursor_Home[0]);
 }
 /*******************************************************************************
 * vfn
@@ -251,7 +240,7 @@ void vfnState2LSN()
     bPreviousState = EXECUTION_STATE;
     bCurrentState = DELAY_STATE;
     bNextState = DOWN_STATE;
-	rGpioC->PDOR = ENABLE;
+	rGpioC->PDOR |= ENABLE;
 }
 /*******************************************************************************
 * vfnStateExecution
@@ -262,25 +251,23 @@ void vfnState2LSN()
 ******************************************************************************/
 void vfnStateExecution()
 {
-	if(bDataSize--)
-	{
-        bCurrentState = DELAY_STATE;
-        bNextState = MSN_STATE;
+    bCurrentState = DELAY_STATE;
+    if((bDataSize--) != 1)
+    {
         bpLCDData++;
-	}
-	else
-	{
+        bNextState = MSN_STATE;
+    }
+    else
+    {
         if(bRegister_Select)
         {
-            bCurrentState = DELAY_STATE;
-            bNextState = IDLE_STATE;
             bRegister_Select = 0x00;
             rGpioC->PDOR &= ~(RS);
+            xbword = 0x00;
+            vfnLCDGotoxy();
+            bCursor = 0x01;
+            bNextState = MSN_STATE;
             if(brow)
-            {
-
-            }
-            else
             {
                 brow = 0x00;
                 xbword = 0x00;
@@ -293,9 +280,24 @@ void vfnStateExecution()
         }
         else
         {
-
+//            if(bCursor)
+//            {
+//                brow = 0x01;
+//                bDataSize = LCD_X;
+//                xbword = 0x00;
+//                bpLCDData = &gbLCDWelcomeMSG[brow][xbword];
+//                bRegister_Select = 0x01;
+//                bCursor = 0x00;
+//            }
+//            else
+//            {
+                brow = 0x00;
+                bNextState = IDLE_STATE;
+                xbword = 0x00;
+                bRegister_Select = 0x00;
+//            }
         }
-	}
+    }
 }
 /*******************************************************************************
 * vfnState_Idle
@@ -306,5 +308,5 @@ void vfnStateExecution()
 ******************************************************************************/
 void vfnState_Idle()
 {
-    bCurrentState = DELAY_STATE;
+    //NTD
 }
