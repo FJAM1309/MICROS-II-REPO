@@ -16,12 +16,12 @@
 #define ENABLE          ( 1 << 2u )
 #define R_W             ( 0x20 )
 #define DELAY           ( 0X2F )
-#define   LCD_INIT_CMD0 ( 0x33 )
-#define   LCD_INIT_CMD1 ( 0x32 )
-#define   LCD_INIT_CMD2 ( 0x28 )
-#define   LCD_INIT_CMD3 ( 0x06 )
-#define   LCD_INIT_CMD4 ( 0x0C )
-#define   LCD_INIT_CMD5 ( 0x0F )
+#define LCD_INIT_CMD0 	( 0x33 )
+#define LCD_INIT_CMD1 	( 0x32 )
+#define LCD_INIT_CMD2 	( 0x28 )
+#define LCD_INIT_CMD3 	( 0x06 )
+#define LCD_INIT_CMD4 	( 0x0C )
+#define LCD_INIT_CMD5 	( 0x0F )
 //#define   LCD_INIT_CMD6 ( 0x01 )
 #define   LCD_Y         ( 2 )
 #define   LCD_X         ( 16 )
@@ -32,8 +32,8 @@ void vfnLCDDriver();
 void vfnLCDUpDate ();
 void vfnLCDInit();
 unsigned char bfnLCDBusy();
-void vfnLCDGotoxy (uint8_t bx, uint8_t by);
-void vfnLCDGotoxy_Home ();
+void vfnLCDGotoxy();
+void vfnLCDGotoxy_Home();
 /*******************************************************************************
  * Local Variables
  ******************************************************************************/

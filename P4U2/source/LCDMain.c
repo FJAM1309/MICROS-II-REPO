@@ -103,7 +103,7 @@ static void vfnLCDWaitState()
 static void vfnWelcomeMsgState()
 {
 	vfnMemSet(&gbLCDWelcomeMSG[0][0],' ',(sizeof(gbLCDWelcomeMSG)/sizeof(gbLCDWelcomeMSG[0])));
-	sprintf(&gbLCDWelcomeMSG[0][0],"   Welcome      ",(sizeof(gbLCDWelcomeMSG)/sizeof(gbLCDWelcomeMSG[0])));	
+	sprintf(&gbLCDWelcomeMSG[0][0],"   %d      ",bData);
 	sprintf(&gbLCDWelcomeMSG[1][0],"   MARIO        ");
 	vfnLCDUpDate();
 	wDly = TIME_MESSAGE;
