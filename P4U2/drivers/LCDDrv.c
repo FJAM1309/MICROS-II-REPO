@@ -43,6 +43,7 @@ void (* vfnDriverLCD[])(void) =
  * Local Variables
  ******************************************************************************/
 
+extern GPIO_Type *rGpioB;
 extern GPIO_Type *rGpioC;
 
 uint8_t gbLCDWelcomeMSG[LCD_Y][LCD_X];
@@ -174,7 +175,7 @@ void vfnLCDUpDate()
 ******************************************************************************/
 void vfnLCDGotoxy (uint8_t bx, uint8_t by) //0000-0100
 {
-    bpLCDData = &bCursor_Home[xbword];
+    bpLCDData = &balJump[xbword];
     bCurrentState = MSN_STATE;
 }
 /*******************************************************************************
@@ -186,7 +187,7 @@ void vfnLCDGotoxy (uint8_t bx, uint8_t by) //0000-0100
 ******************************************************************************/
 void vfnLCDGotoxy_Home()
 {
-    bpLCDData = &balJump[xbword];
+    bpLCDData = &bCursor_Home[xbword];
     bCurrentState = MSN_STATE;
 }
 /*******************************************************************************
@@ -218,7 +219,7 @@ void vfnDly500nsState(void)
 ******************************************************************************/
 void vfnState0MSN()
 {         
-	rGpioC->PDOR = (*bpLCDData & MSB_MASK) >> SHIFT;
+	rGpioB->PDOR = (*bpLCDData & MSB_MASK) >> SHIFT;
     bPreviousState = LSN_STATE;
     bCurrentState = DELAY_STATE;
     bNextState = DOWN_STATE;
@@ -246,11 +247,11 @@ void vfnState1EDown(void)
 ******************************************************************************/
 void vfnState2LSN()
 { 
-	rGpioC->PDOR = (*bpLCDData & LSB_MASK);
+	rGpioB->PDOR = (*bpLCDData & LSB_MASK);
     bPreviousState = EXECUTION_STATE;
     bCurrentState = DELAY_STATE;
     bNextState = DOWN_STATE;
-	rGpioC->PDOR |= ENABLE;
+	rGpioC->PDOR = ENABLE;
 }
 /*******************************************************************************
 * vfnStateExecution

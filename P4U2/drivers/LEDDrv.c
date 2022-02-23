@@ -48,29 +48,30 @@ void vfnLEDsInit(void)
 	/*Enable Clks*/
 	rclkSIM_gpio->SCGC5 = SIM_SCGC5_PORTB_MASK | SIM_SCGC5_PORTD_MASK | SIM_SCGC5_PORTC_MASK;
 
-	rPortD->PCR[1] = PORT_PCR_MUX(1);	/*Alternative pin MUX*/
-	rPortB->PCR[18] = PORT_PCR_MUX(1);
-	rPortB->PCR[19] = PORT_PCR_MUX(1);
-    rPortB->PCR[PIN_B0] = PORT_PCR_MUX(1);
+	rPortD->PCR[BLU] = PORT_PCR_MUX(1);	/*Alternative pin MUX*/
+	rPortB->PCR[RED] = PORT_PCR_MUX(1);
+	rPortB->PCR[GRN] = PORT_PCR_MUX(1);
 
-    rPortC->PCR[PIN_C0] = PORT_PCR_MUX(1);
+    rPortB->PCR[PIN_B0] = PORT_PCR_MUX(1);
+    rPortB->PCR[PIN_B1] = PORT_PCR_MUX(1);
+    rPortB->PCR[PIN_B2] = PORT_PCR_MUX(1);
+    rPortB->PCR[PIN_B3] = PORT_PCR_MUX(1);
+
     rPortC->PCR[PIN_C1] = PORT_PCR_MUX(1);
     rPortC->PCR[PIN_C2] = PORT_PCR_MUX(1);
-    rPortC->PCR[PIN_C3] = PORT_PCR_MUX(1);
 
     rGpioD->PDDR =1u << BLU;			/*Port Data Direction Register*/
-    rGpioB->PDDR = 1u << RED | 1u << GRN | 1u << PIN_B0;
+    rGpioB->PDDR = 1u << RED | 1u << GRN;
 
 	rGpioB->PSOR = 1u << RED; 			/*Turn OFF*/
 	rGpioB->PSOR |= 1u << GRN;
 	rGpioD->PSOR |= 1u << BLU;
 
-    rGpioB->PSOR |= 1u << PIN_B0;
+    rGpioB->PDDR |= 1u << PIN_B0 | 1u << PIN_B1 | 1u << PIN_B2 | 1u << PIN_B3;
+    rGpioB->PSOR |= 1u << PIN_B0 | 1u << PIN_B1 | 1u << PIN_B2 | 1u << PIN_B3;
 
-    rGpioC->PDDR = 1u << PIN_C0 | 1u << PIN_C1 | 1u << PIN_C2 | 1u << PIN_C3;
-    rGpioC->PSOR = 1u << PIN_C0 | 1u << PIN_C1 | 1u << PIN_C2 | 1u << PIN_C3;
-
-
+    rGpioC->PDDR = 1u << PIN_C1 | 1u << PIN_C2;
+    rGpioC->PSOR = 1u << PIN_C1 | 1u << PIN_C2;
 }
 /*******************************************************************************
  * vfnLEDRed
