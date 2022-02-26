@@ -53,8 +53,8 @@ uint8_t bCursor = 0x00;
 volatile  uint8_t bCnt = DELAY;
 static uint8_t bDataSize = 0x00;
 static uint8_t *bpLCDData = 0x00;
-static uint8_t xbword = 0x00;
-static uint8_t brow = 0x00;
+static uint8_t bLCDX = 0x00;
+static uint8_t bLCDY = 0x00;
 static uint8_t bRegister_Select = 0x00;
 
 typedef enum
@@ -114,7 +114,7 @@ void vfnLCDInit()
     if(bCurrentState == IDLE_STATE)
     { 
     bDataSize = sizeof(baLCDConfig);
-    bpLCDData = &baLCDConfig[xbword];
+    bpLCDData = &baLCDConfig[bLCDX];
     bCurrentState = MSN_STATE;
     } 
 }
@@ -149,7 +149,7 @@ void vfnLCDUpDate()
     {
         bDataSize = sizeof(gbLCDWelcomeMSG);
         bDataSize = LCD_X;
-        bpLCDData = &gbLCDWelcomeMSG[brow][xbword];
+        bpLCDData = &gbLCDWelcomeMSG[bLCDY][bLCDX];
         rGpioC->PDOR |= RS;
         bRegister_Select = 0x01;
         bCurrentState = MSN_STATE;
@@ -164,7 +164,7 @@ void vfnLCDUpDate()
 ******************************************************************************/
 void vfnLCDGotoxy(void) //0000-0100
 {
-    bpLCDData = &balJump[xbword];
+    bpLCDData = &balJump[bLCDX];
     bDataSize = sizeof(balJump)/sizeof(balJump[0]);
 }
 /*******************************************************************************
@@ -176,7 +176,7 @@ void vfnLCDGotoxy(void) //0000-0100
 ******************************************************************************/
 void vfnLCDGotoxy_Home()
 {
-    bpLCDData = &bCursor_Home[xbword];
+    bpLCDData = &bCursor_Home[bLCDX];
     bDataSize = sizeof(bCursor_Home)/sizeof(bCursor_Home[0]);
 }
 /*******************************************************************************
@@ -263,14 +263,14 @@ void vfnStateExecution()
         {
             bRegister_Select = 0x00;
             rGpioC->PDOR &= ~(RS);
-            xbword = 0x00;
+            bLCDX = 0x00;
             vfnLCDGotoxy();
             bCursor = 0x01;
             bNextState = MSN_STATE;
-            if(brow)
+            if(bLCDY)
             {
-                brow = 0x00;
-                xbword = 0x00;
+                bLCDY = 0x00;
+                bLCDX = 0x00;
                 bRegister_Select = 0x00;
                 rGpioC->PDOR &= ~(RS);
                 vfnLCDGotoxy_Home();
@@ -280,22 +280,23 @@ void vfnStateExecution()
         }
         else
         {
-//            if(bCursor)
-//            {
-//                brow = 0x01;
-//                bDataSize = LCD_X;
-//                xbword = 0x00;
-//                bpLCDData = &gbLCDWelcomeMSG[brow][xbword];
-//                bRegister_Select = 0x01;
-//                bCursor = 0x00;
-//            }
-//            else
-//            {
-                brow = 0x00;
+            if(bCursor)
+            {
+                bLCDY = 0x01;
+                bDataSize = LCD_X;
+                bLCDX = 0x00;
+                bpLCDData = &gbLCDWelcomeMSG[bLCDY][bLCDX];
+                bRegister_Select = 0x01;
+                rGpioC->PDOR |= RS;
+                bCursor = 0x00;
+            }
+            else
+            {
+                bLCDY = 0x00;
                 bNextState = IDLE_STATE;
-                xbword = 0x00;
+                bLCDX = 0x00;
                 bRegister_Select = 0x00;
-//            }
+            }
         }
     }
 }
