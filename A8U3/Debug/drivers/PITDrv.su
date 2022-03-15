@@ -1,0 +1,3 @@
+../drivers/PITDrv.c:35:6:vfnPIT0Init	16	static
+../drivers/PITDrv.c:43:6:vfnPIT1Init	16	static
+../drivers/PITDrv.c:57:15:bfnPITCheck	16	static
