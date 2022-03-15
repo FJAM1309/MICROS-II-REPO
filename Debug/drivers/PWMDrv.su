@@ -1,5 +1,0 @@
-../drivers/PWMDrv.c:36:6:vfnTPMInit	16	static
-../drivers/PWMDrv.c:44:6:vfnPWMConfig	24	static
-../drivers/PWMDrv.c:72:6:vfnTPMChannelInnit	16	static
-../drivers/PWMDrv.c:77:6:vfnTPMChannelDisable	16	static
-../drivers/PWMDrv.c:88:6:vfnFuncPWM	16	static
